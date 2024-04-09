@@ -151,3 +151,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 Bursar_15608_01.04.2024_test.xlsx
+*.xlsx
