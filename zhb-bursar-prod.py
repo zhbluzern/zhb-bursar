@@ -151,16 +151,16 @@ for user_id, user_group in filtered_df.groupby('UserID'):
             user_data['user_note'] = user_notes
         
         # 12: update user: lade den angereicherten Benutzer mit einem PUT-Request in Alma hoch
-        df.loc[df['UserID'] == user_id, 'Alma update'] = 'no update'
+        alma_update = 'no update'
         if prod == 'True':
             put_response = requests.put(alma_api_url, json=user_data, headers=headers)
             if put_response.status_code == 200:
                 print(f"Benutzer {user_id} aktualisiert. Statuscode: {put_response.status_code}")
-                df.loc[df['UserID'] == user_id, 'Alma update'] = 'success'
+                alma_update = 'success'
             else:
                 print("Benutzerupdate failed:", put_response.content)
-                df.loc[df['UserID'] == user_id, 'Alma update'] = 'failed'
-
+                alma_update = 'failed'
+        df.loc[df['UserID'] == user_id, 'Alma update'] = alma_update
     else:
         fehlermeldung = f"Fehler bei der API-Anfrage für Benutzer {user_id}. Statuscode: {response.status_code}"
         df.loc[df['UserID'] == user_id, 'Fehlermeldung'] = fehlermeldung
