@@ -10,7 +10,7 @@ api_key = os.getenv('api_key_prod')
 counter = 0
 countersperren = 0
 counterrechnung = 0
-prod = 'False' # Durchlauf ohne Alma-Update
+prod = 'True' # Durchlauf ohne Alma-Update: False, mit Update: True
 
 # 1. Lies die Eingabedatei 
 input_filename = 'Bursar_15608_01.04.2024.xlsx'
