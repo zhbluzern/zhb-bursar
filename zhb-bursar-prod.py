@@ -10,10 +10,10 @@ api_key = os.getenv('api_key_prod')
 counter = 0
 countersperren = 0
 counterrechnung = 0
-prod = 'True' # Durchlauf ohne Alma-Update: False, mit Update: True
+prod = 'False' # Durchlauf ohne Alma-Update: False, mit Update: True
+input_filename = 'Bursar_15608_dd.mm.yyyy.xlsx' # Filenamen anpassen
 
-# 1. Lies die Eingabedatei 
-input_filename = 'Bursar_15608_01.04.2024.xlsx'
+# 1. Lies die Eingabedatei
 df = pd.read_excel(input_filename)  
 
 # 2. Filtere Zeilen, bei denen 'Grund Abzuege' gleich 'Closed after final reminder' ist
