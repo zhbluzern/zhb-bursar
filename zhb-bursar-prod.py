@@ -4,14 +4,17 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
-# Api key
+# Api key und weitere Variablen
 load_dotenv()
 api_key = os.getenv('api_key_prod')
 counter = 0
 countersperren = 0
 counterrechnung = 0
 prod = 'False' # Durchlauf ohne Alma-Update: False, mit Update: True
-input_filename = 'Bursar_15608_dd.mm.yyyy.xlsx' # Filenamen anpassen
+input_filename = 'Bursar_number_dd.mm.yyyy.xlsx' # Filenamen anpassen
+#input_filename = 'BURSAR_32505_01.07.2024.xlsx' 
+output_filename = 'Bursar-dd-mm-yyyy-Rechnungen-Sperren.xlsx'
+#output_filename = 'Bursar-06-07-2024-Rechnungen-Sperren.xlsx'
 
 # 1. Lies die Eingabedatei
 df = pd.read_excel(input_filename)  
@@ -167,7 +170,7 @@ for user_id, user_group in filtered_df.groupby('UserID'):
         print(fehlermeldung)
 
 # 13. Speichere die aktualisierte Eingabedatei
-output_filename = 'Bursar-09-04-2024-Rechnungen-Sperren.xlsx'
+
 df.to_excel(output_filename, index=False)
 print(f'-------------------------------\n\n\nAktualisierte Eingabedatei wurde unter "{output_filename}" gespeichert.')
 print("Anzahl Rechnungen: ",counterrechnung)
