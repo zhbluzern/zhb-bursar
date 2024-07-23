@@ -76,5 +76,7 @@ Skript ausführen:
 python zhb-bursar-prod.py
 ```
 
+## Rechnungsnummern nachtragen
 
+Das Script "update-Rechnungsnummer.py" trägt nachträglich die in SAP erstellten Debitorennummern als Registrar-Notiz in Alma ein. Sie benötigt die überarbeitete Eingabedatei (von der Buchhaltung, nach Erstellung der Debitoren).
  

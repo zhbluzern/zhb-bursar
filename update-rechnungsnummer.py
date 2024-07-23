@@ -10,9 +10,10 @@ load_dotenv()
 
 # API-Schlüssel aus .env Datei laden
 ALMA_API_KEY = os.getenv('api_key_prod')
+input_file = 'Bursar-06-07-2024-Rechnungen-Sperren.xlsx'
 
 # Excel-Datei laden
-df = pd.read_excel('Debitoren-april24.xlsx')
+df = pd.read_excel(input_file)
 
 # Funktion zum Erstellen der neuen user_note
 def create_user_note(debitorennummer):
@@ -21,7 +22,7 @@ def create_user_note(debitorennummer):
             "value": "REGISTAR",
             "desc": "Registrar"
         },
-        "note_text": f"ZHB-Bursar: {debitorennummer}",
+        "note_text": f"ZHB-SAP: {debitorennummer}",
         "user_viewable": "false",
         "popup_note": "false",
         "created_by": "lit@zhbluzern.ch",
@@ -54,7 +55,12 @@ def update_user(user_id, user_data):
 # Verarbeitung der Excel-Daten und API-Anfragen
 for index, row in df.iterrows():
     user_id = row['UserID']
-    debitorennummer = row['Debitorennummer']
+    if pd.isna(row['Debitorennummer']):
+        # Wenn keine Rg.nr.: überspringe den Rest des Schleifendurchlaufs und gehe zur nächsten Zeile
+        #print("Keine Debitorennummer!")
+        continue
+
+    debitorennummer = str(int(row['Debitorennummer']))
     
     user_data = get_user(user_id)
     if user_data:
@@ -71,11 +77,12 @@ for index, row in df.iterrows():
         else:
             new_note = create_user_note(debitorennummer)
             user_data['user_note'].append(new_note)
-            status_code = update_user(user_id, user_data)
+            #status_code = update_user(user_id, user_data)
+            status_code = "test" # TEST-MODUS
             if status_code == 200:
                 print(f"User {user_id} successfully updated.")
             else:
-                print(f"Failed to update user {user_id}. Status code: {status_code}")
+                print(f"Failed to update user {user_id} with {debitorennummer}. Status code: {status_code}")
     else:
         print(f"User {user_id} not found.")
 
