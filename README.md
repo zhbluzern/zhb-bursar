@@ -110,5 +110,5 @@ Danach zuerst einmal im Test-Modus durchlaufen lassen, um zu prüfen, ob alles k
            status_code = "test" # TEST-MODUS
 ```
 Wenn der  Console output gut aussieht, obige beiden Zeilen umkommentieren und das Update laufen lassen. 
-Wenn erfolgreich update gemacht, dann kurz in Alma prüfen, ob korrekt (Stichprobe), und Claudia / Silvio auf Teams informieren. 
+Wenn erfolgreich update gemacht, dann kurz in Alma prüfen, ob korrekt (Stichprobe). 
  
