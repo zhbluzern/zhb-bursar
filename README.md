@@ -3,28 +3,21 @@
 # Bursar ZHB Closed after final reminder
 
 
-## Workflow
+## Ablauf des Python Scripts
 
-Es gibt eine Eingabedatei von SLSP im Excel-Format. Vorgehen des Skripts:
+Es gibt eine Eingabedatei von SLSP im Excel-Format. Das Python Script macht folgendes:
 
 - Excel-Datei einlesen und in einem Dataframe speichern
 
 - Spalte 'Grund Abzuege': nur Zeilen berücksichtigen, bei denen der Wert "Closed after final reminder" steht (filtern).
 
-- Spalte 'UserID' gruppieren und die Spalte 'Fakturierter Betrag' pro Benutzer summieren. 
+- Spalte 'UserID' gruppieren und die Spalte 'Fakturierter Betrag' pro Benutzer summieren. Summierten Betrag speichern in einer Variable 'Gesamtbetrag'.
 
-- Summierten Betrag speichern in einer Variable 'Gesamtbetrag'.
+- Pro UserID einen GET request auf die Alma user API abschicken und den user mittels der variable 'UserID' als primary_id im JSON-Format holen. User in einem JSON-Objekt speichern, Name und Vorname auslesen (Attribut 'first_name' und 'last_name')
 
-- Pro UserID einen GET request auf die Alma user API abschicken und den user mittels der variable 'UserID' als primary_id im JSON-Format holen. Headers: 'Accept': 'application/json', 'Content-Type': 'application/json'. 
+- Bereich 'contact_info', 'address': Attribut "preferred": true berücksichtigen. Daten der preferred address in einzelne Spalten speichern: 'line1', 'line2', 'postal_code' 'city', 'country.value'
 
-- user in einem JSON-Objekt speichern, Name und Vorname auslesen (Attribut 'first_name' und 'last_name')
-
-- Bereich 'contact_info', 'address': Attribut "preferred": true berücksichtigen
-
-- Daten der preferred address in einzelne Spalten speichern: 'line1', 'line2', 'postal_code' 'city', 'country.value'
-
-- prüfen ob bereits ein user_block mit block_type.value 'CASH' vorhanden ist. Wenn ja: Spalte "Frühere Sperren": block_note und created_date dieses user_blocks speichern 
-- dasselbe für USER-Sperren (Falsche Adressen)
+- prüfen ob bereits ein user_block mit block_type.value 'CASH' vorhanden ist. Wenn ja: Spalte "Frühere Sperren": block_note und created_date dieses user_blocks speichern, dasselbe für USER-Sperren (Falsche Adressen)
 
 - Ist der Gesamtbetrag pro UserID 50.00 CHF oder höher: Aktion = "Rechnung". Ist der Gesamtbetrag kleiner als 50.00 CHF: Aktion = "Sperre"
 
@@ -32,7 +25,7 @@ Es gibt eine Eingabedatei von SLSP im Excel-Format. Vorgehen des Skripts:
 
     'Gesamtbetrag' CHF. Bitte an der Theke einkassieren und anschliessend Sperre entfernen, keine Ausleihe, bis Sperre gelöscht. Details: 'Fakturierter Betrag', 'Library code'/'Gebührentyp'/'Gebührendatum'", wiederhole dies für jeden Einzelbetrag dieser UserID.  
 
-- Einen neuen (zusätzlichen) Block in folgender Struktur anlegen:
+  Danach einen neuen (zusätzlichen) Block in folgender Struktur anlegen:
 
   "user_block": [
     {
@@ -52,9 +45,9 @@ Es gibt eine Eingabedatei von SLSP im Excel-Format. Vorgehen des Skripts:
     }
 
 
-- Bei Aktion Rechnung: Benutzernotiz (user_note) anlegen "Rechnung 'gesamtbetrag' erstellt am..." anlegen
+- Bei Aktion Rechnung: Benutzernotiz (user_note) "Rechnung 'gesamtbetrag' erstellt am..." anlegen
 
-- Den angereicherten user mit einem PUT-request in Alma hochladen. (Für prod-Durchlauf auf 'True' setzen)
+- Den angereicherten user mit einem PUT-request in Alma hochladen. (Wenn prod-Durchlauf auf 'True')
 
 
 
@@ -66,7 +59,7 @@ Beachte bitte, dass du möglicherweise zusätzliche Bibliotheken installieren mu
         
 um die benötigten Bibliotheken zu installieren.
 
-Für die API-Keys wird ein .env file verwendet. 
+Für die API-Keys wird ein .env file verwendet. Das File befindet sich im 1Password von LIT.
 
 Dateinamen anpassen: Variablen 'input_filename' und 'output_filename' müssen angepasst werden. Die Input-Datei muss im selben Verzeichnis liegen. 
 
