@@ -61,7 +61,7 @@ um die benötigten Bibliotheken zu installieren.
 
 Für die API-Keys wird ein .env file verwendet. Das File befindet sich im 1Password von LIT.
 
-## Ausführen
+## zhb-bursar-prod ausführen
 
 Dateinamen anpassen: Variablen 'input_filename' und 'output_filename' müssen angepasst werden. Die Input-Datei muss im selben Verzeichnis liegen. Wenn das Original im CSV vorliegt, umwandeln in Excel. 
 Bsp. 
