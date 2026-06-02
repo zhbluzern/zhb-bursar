@@ -61,7 +61,21 @@ um die benötigten Bibliotheken zu installieren.
 
 Für die API-Keys wird ein .env file verwendet. Das File befindet sich im 1Password von LIT.
 
-Dateinamen anpassen: Variablen 'input_filename' und 'output_filename' müssen angepasst werden. Die Input-Datei muss im selben Verzeichnis liegen. 
+## Ausführen
+
+Dateinamen anpassen: Variablen 'input_filename' und 'output_filename' müssen angepasst werden. Die Input-Datei muss im selben Verzeichnis liegen. Wenn das Original im CSV vorliegt, umwandeln in Excel. 
+Bsp. 
+
+```
+input_filename = 'BURSAR_32505_01.07.2024.xlsx'
+output_filename = 'Bursar-06-07-2024-Rechnungen-Sperren.xlsx'
+```
+
+Zunächst einen Testlauf machen (ohne Alma-Update) => im Script bei allgemeine Variablen:
+
+```
+  prod = 'False'
+```
 
 Skript ausführen:
 
@@ -69,7 +83,32 @@ Skript ausführen:
 python zhb-bursar-prod.py
 ```
 
+Im Test-Modus wird nur die Ausgabedatei erstellt mit den Adressen (Alma-GET) sowie den zukünftigen Sperr- und Rechnungsnotizen. Ausgabedatei prüfen, wenn alles in Ordnung:
+```
+prod = "True"
+```
+Skript erneut ausführen => diesmal werden die Sperren und Rechnungsnotizen eingetragen. Am besten das Log als Datei speichern, z.B. so:
+```
+python zhb-bursar-prod.py > bursar-yyyy-mm-dd.log
+```
+
+Ausgabedatei nochmals prüfen, Filter setzen und vorfiltern auf "closed after final reminder", sortieren nach user id. 
+Danach unbedingt(!) im Script wieder auf prod = 'False' setzen und die Dateinamen anonymisieren (Auskommentieren). So wird verhindert, dass das das Script versehentlich nochmals ausgeführt und alle Sperren doppelt eingetragen werden. 
+
 ## Rechnungsnummern nachtragen
 
 Das Script "update-Rechnungsnummer.py" trägt nachträglich die in SAP erstellten Debitorennummern als Registrar-Notiz in Alma ein. Sie benötigt die überarbeitete Eingabedatei (von der Buchhaltung, nach Erstellung der Debitoren).
+
+Aktualisierte Datei mit der Spalte Debitorennummer ausgefüllt herunterladen von Teams. 
+Script 'update-rechnungsnummer.py' anpassen, Dateiname austauschen. Bsp. 
+```
+input_file = 'Bursar-06-07-2024-Rechnungen-Sperren.xlsx'
+```
+Danach zuerst einmal im Test-Modus durchlaufen lassen, um zu prüfen, ob alles korrekt verarbeitet wird. Dazu folgende Zeile aus bzw. einkommentieren: (ca. Zeile 80-81)
+```
+            #status_code = update_user(user_id, user_data)
+           status_code = "test" # TEST-MODUS
+```
+Wenn der  Console output gut aussieht, obige beiden Zeilen umkommentieren und das Update laufen lassen. 
+Wenn erfolgreich update gemacht, dann kurz in Alma prüfen, ob korrekt (Stichprobe), und Claudia / Silvio auf Teams informieren. 
  
